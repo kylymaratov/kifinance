@@ -5,29 +5,47 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "experiments": {
       "tsconfigPaths": true
     },
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "backgroundColor": "#f8fafc",
     "ios": {
+      "userInterfaceStyle": "automatic",
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "userInterfaceStyle": "automatic",
+      "androidStatusBar": {
+        "barStyle": "dark-content",
+        "backgroundColor": "#00000000",
+        "translucent": true
+      }
     },
+
     "web": {
-      "favicon": "./assets/favicon.png"
+      "backgroundColor": "#f8fafc",
+      "darkBackgroundColor": "#0f172a"
     }
+  },
+  "splash": {
+    "image": "./assets/splash-icon.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#ffffff"
+  },
+  "ios": {
+    "supportsTablet": true
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/adaptive-icon.png",
+      "backgroundColor": "#ffffff"
+    },
+    "edgeToEdgeEnabled": true,
+    "predictiveBackGestureEnabled": false
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
   }
 }

@@ -1,36 +1,47 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react'
+import { View, useColorScheme } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useColorScheme } from 'react-native'
-
+import { themes } from '@/utils/themeColors'
 type Theme = 'light' | 'dark' | 'system'
 
 interface ThemeContextType {
   theme: Theme
   isDark: boolean
   setTheme: (theme: Theme) => void
-  toggleTheme: () => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 const THEME_STORAGE_KEY = '@kifinance_theme'
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+interface ThemeProviderProps {
+  children: ReactNode
+}
+
+export function ThemeProvider({ children }: ThemeProviderProps) {
   const systemColorScheme = useColorScheme()
   const [theme, setThemeState] = useState<Theme>('system')
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    // Load saved theme preference
     AsyncStorage.getItem(THEME_STORAGE_KEY).then((savedTheme) => {
-      if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
+      if (
+        savedTheme === 'light' ||
+        savedTheme === 'dark' ||
+        savedTheme === 'system'
+      ) {
         setThemeState(savedTheme as Theme)
       }
     })
   }, [])
 
   useEffect(() => {
-    // Determine if dark mode should be active
     if (theme === 'system') {
       setIsDark(systemColorScheme === 'dark')
     } else {
@@ -43,25 +54,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem(THEME_STORAGE_KEY, newTheme)
   }
 
-  const toggleTheme = () => {
-    if (theme === 'system') {
-      setTheme(systemColorScheme === 'dark' ? 'light' : 'dark')
-    } else {
-      setTheme(theme === 'dark' ? 'light' : 'dark')
-    }
-  }
+  const currentTheme = isDark ? 'dark' : 'light'
 
   return (
-    <ThemeContext.Provider value={{ theme, isDark, setTheme, toggleTheme }}>
-      {children}
+    <ThemeContext.Provider value={{ theme, isDark, setTheme }}>
+      <View
+        style={themes[currentTheme]}
+        className={`flex-1 ${isDark ? 'dark' : ''}`}
+      >
+        {children}
+      </View>
     </ThemeContext.Provider>
   )
 }
 
-export function useTheme() {
+export function useThemeContext() {
   const context = useContext(ThemeContext)
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
+    throw new Error('useThemeContext must be used within a ThemeProvider')
   }
   return context
 }

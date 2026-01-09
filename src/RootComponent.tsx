@@ -1,76 +1,36 @@
 import '../global.css'
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Ionicons } from '@expo/vector-icons'
-import { NavigationContainer } from '@react-navigation/native'
-import { View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-import HomeScreen from '@/screens/HomeScreen'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useMemo } from 'react'
+import { TTabScreen } from './types/tab.types'
+import HomeScreen from './screens/HomeScreen'
 import StatsScreen from './screens/StatsScreen'
 import SettingsScreen from './screens/SettingsScreen'
-import { useThemeStyles } from './utils/themeStyles'
+import BotttomNavigation from './components/BottomNavigation'
+import { DarkTheme, DefaultTheme } from '@react-navigation/native'
+import { themeColors } from './utils/themeColors'
+import { StatusBar } from 'expo-status-bar'
+import { View } from 'react-native'
+import { useThemeContext } from './contexts/ThemeContext'
 
-const Tab = createBottomTabNavigator()
+export default function RootComponent() {
+  const { isDark } = useThemeContext()
 
-interface Props {
-  globalTheme: any
-  isDark: boolean
-}
-
-export default function RootComponent({ globalTheme, isDark }: Props) {
-  const { screenBackground } = useThemeStyles()
-  const insets = useSafeAreaInsets()
+  const tabs = useMemo<TTabScreen[]>(
+    () => [
+      { name: 'Home', component: HomeScreen },
+      { name: 'Stats', component: StatsScreen },
+      { name: 'Settings', component: SettingsScreen },
+    ],
+    []
+  )
 
   return (
-    <View className={isDark ? 'dark' : ''} style={[{ flex: 1 }, screenBackground]}>
-      <NavigationContainer theme={globalTheme}>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName
-
-              if (route.name === 'Home') {
-                iconName = focused ? 'wallet' : 'wallet-outline'
-              }
-              if (route.name === 'Stats') {
-                iconName = focused ? 'analytics' : 'analytics-outline'
-              }
-              if (route.name === 'Settings') {
-                iconName = focused ? 'settings' : 'settings-outline'
-              }
-
-              return <Ionicons name={iconName as any} size={size} color={color} />
-            },
-            tabBarActiveTintColor: '#15803d',
-            tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
-            tabBarStyle: {
-              height: 65 + insets.bottom,
-              paddingBottom: 5 + insets.bottom,
-              paddingTop: 5,
-              backgroundColor: isDark ? '#1e1f20' : '#ffffff',
-              borderTopColor: isDark ? '#2a2b2c' : '#e5e5e5',
-            },
-            headerShown: false,
-          })}
-        >
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ tabBarLabel: 'Overview' }}
-          />
-          <Tab.Screen
-            name="Stats"
-            component={StatsScreen}
-            options={{ tabBarLabel: 'Stats' }}
-          />
-          <Tab.Screen
-            name="Settings"
-            component={SettingsScreen}
-            options={{ tabBarLabel: 'Settings' }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
+    <View className="flex-1 bg-screen dark:bg-screen-dark">
+      <SafeAreaView className="flex-1" edges={['top', 'bottom']}>
+        <BotttomNavigation tabs={tabs} />
+        <StatusBar style={isDark ? 'light' : 'dark'} translucent />
+      </SafeAreaView>
     </View>
   )
 }

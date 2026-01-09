@@ -1,21 +1,13 @@
-import { StatusBar } from 'expo-status-bar'
 import { Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useTheme } from '../contexts/ThemeContext'
-import { useThemeStyles } from '../utils/themeStyles'
 
 export default function HomeScreen() {
-  const { isDark } = useTheme()
-  const { screenBackground } = useThemeStyles()
-
   return (
-    <SafeAreaView className="flex-1 bg-white" style={screenBackground} edges={['top']}>
+    <View className="flex-1">
       <View className="p-4">
         <Text className="text-2xl font-bold text-gray-900 dark:text-white">
           Hello from Expo App
         </Text>
       </View>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
-    </SafeAreaView>
+    </View>
   )
 }
